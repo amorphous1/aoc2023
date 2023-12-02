@@ -1,4 +1,4 @@
-package com.github.amorphous1;
+package com.github.amorphous1.aoc2023;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -8,22 +8,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 public class Day02 {
     public static void main(String[] args) throws URISyntaxException, IOException {
         String input = Files.readString(Paths.get(Day02.class.getClassLoader().getResource("day02.input").toURI()));
         System.out.println(part1(input));
+        System.out.println(part2(input));
     }
 
-    public static int part1(String input) {
+    static int part1(String input) {
         return input.lines()
                 .map(Day02::toCubeDraws)
                 .filter(draws -> Day02.isPossible(draws, Map.of("red", 12, "green", 13, "blue", 14)))
                 .map(draws -> draws.gameId)
                 .mapToInt(i -> i).sum();
+    }
+
+    static int part2(String input) {
+        return input.lines()
+                .map(Day02::toCubeDraws)
+                .map(Day02::toCubeSetPower)
+                .mapToInt(i -> i).sum();
+    }
+
+    private static int toCubeSetPower(CubeDraws cubeDraws) {
+        Map<String, Integer> minCubes = new HashMap<>();
+        cubeDraws.draws().forEach(cubeDraw ->
+                cubeDraw.forEach((color, amount) -> {
+                    if (amount > minCubes.getOrDefault(color, 0)) {
+                        minCubes.put(color, amount);
+                    }
+                }));
+        return minCubes.values().stream().reduce(1, (x, y) -> x * y);
     }
 
     private static boolean isPossible(CubeDraws cubeDraws, Map<String, Integer> maxCubes) {
@@ -52,5 +68,5 @@ public class Day02 {
         return new CubeDraws(gameId, draws);
     }
 
-    private record CubeDraws(int gameId, List<Map<String, Integer>> draws) {};
+    private record CubeDraws(int gameId, List<Map<String, Integer>> draws) {}
 }

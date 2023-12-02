@@ -1,4 +1,4 @@
-package com.github.amorphous1;
+package com.github.amorphous1.aoc2023;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
