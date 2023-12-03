@@ -21,7 +21,7 @@ public class Day03 {
         EngineSchematic engineSchematic = EngineSchematic.from(input);
         Set<Part> partsAdjacentToSymbol = new HashSet<>();
         for (Pos symbolPosition : engineSchematic.symbols) {
-            for (Pos neighbour : symbolPosition.neighbours(engineSchematic.max)) {
+            for (Pos neighbour : symbolPosition.neighbours()) {
                 if (engineSchematic.parts.containsKey(neighbour)) {
                     partsAdjacentToSymbol.add(engineSchematic.parts.get(neighbour));
                 }
@@ -31,11 +31,11 @@ public class Day03 {
     }
 
     private record Pos(int x, int y) {
-        public List<Pos> neighbours(Pos max) {
+        public List<Pos> neighbours() {
             List<Pos> result = new ArrayList<>();
             for (int nx = x-1; nx <= x+1; nx++) {
                 for (int ny = y-1; ny <= y+1; ny++) {
-                    if ((nx!=x || ny!=y) && nx >= 0 && nx <= max.x && ny >= 0 && ny <= max.y) {
+                    if (nx!=x || ny!=y) {
                         result.add(new Pos(nx, ny));
                     }
                 }
@@ -44,13 +44,12 @@ public class Day03 {
         }
     }
     private record Part(int partId, int partNumber) {}
-    private record EngineSchematic(List<Pos> symbols, Map<Pos, Part> parts, Pos max) {
+    private record EngineSchematic(List<Pos> symbols, Map<Pos, Part> parts) {
         public static EngineSchematic from (String input) {
             List<Pos> symbols = new ArrayList<>();
             Map<Pos, Part> parts = new HashMap<>();
             int y = 0, partId = 0;
-            final List<String> lines = input.lines().toList();
-            for (String line : lines) {
+            for (String line : input.lines().toList()) {
                 int x = 0;
                 while (x < line.length()) {
                     if (Character.isDigit(line.charAt(x))) {
@@ -71,7 +70,7 @@ public class Day03 {
                 }
                 y++;
             }
-            return new EngineSchematic(symbols, parts, new Pos(lines.iterator().next().length(), lines.size()));
+            return new EngineSchematic(symbols, parts);
         }
     }
 }
