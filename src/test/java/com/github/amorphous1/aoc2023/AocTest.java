@@ -52,6 +52,7 @@ public class AocTest {
 .664.598..""";
 
         assertEquals(4361, Day03.part1(sampleInput));
+        assertEquals(467835, Day03.part2(sampleInput));
     }
 
 }
