@@ -36,4 +36,22 @@ public class AocTest {
         assertEquals(8, Day02.part1(sampleInput));
         assertEquals(2286, Day02.part2(sampleInput));
     }
+
+    @Test
+    public void day03() {
+        final String sampleInput = """
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..""";
+
+        assertEquals(4361, Day03.part1(sampleInput));
+    }
+
 }
