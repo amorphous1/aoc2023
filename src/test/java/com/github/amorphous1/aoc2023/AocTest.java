@@ -69,4 +69,14 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11""";
         assertEquals(30, Day04.part2(sampleInput));
     }
 
+    @Test
+    public void day06() {
+        final String sampleInput = """
+Time:      7  15   30
+Distance:  9  40  200""";
+
+        assertEquals(288, Day06.part1(sampleInput));
+        assertEquals(71503, Day06.part2(sampleInput));
+    }
+
 }
