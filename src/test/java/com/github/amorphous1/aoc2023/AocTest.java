@@ -79,4 +79,13 @@ Distance:  9  40  200""";
         assertEquals(71503, Day06.part2(sampleInput));
     }
 
+    @Test
+    public void day08() {
+        assertEquals(6, Day08.part1("""
+LLR
+
+AAA = (BBB, BBB)
+BBB = (AAA, ZZZ)
+ZZZ = (ZZZ, ZZZ)"""));
+    }
 }
