@@ -80,6 +80,18 @@ Distance:  9  40  200""";
     }
 
     @Test
+    public void day07() {
+        final String sampleInput = """
+32T3K 765
+T55J5 684
+KK677 28
+KTJJT 220
+QQQJA 483""";
+
+        assertEquals(6440, Day07.part1(sampleInput));
+    }
+
+    @Test
     public void day08() {
         assertEquals(6, Day08.part1("""
 LLR
