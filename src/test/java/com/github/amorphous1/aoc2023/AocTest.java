@@ -89,6 +89,7 @@ KTJJT 220
 QQQJA 483""";
 
         assertEquals(6440, Day07.part1(sampleInput));
+        assertEquals(5905, Day07.part2(sampleInput));
     }
 
     @Test

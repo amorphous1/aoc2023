@@ -14,10 +14,18 @@ public class Day07 {
     public static void main(String[] args) throws URISyntaxException, IOException {
         String input = Files.readString(Paths.get(Day07.class.getClassLoader().getResource("day07.input").toURI()));
         System.out.println(part1(input));
+        System.out.println(part2(input));
     }
 
     static int part1(final String input) {
-        List<Hand> handsByStrength = input.lines().map(Hand::parse)
+        return calculateWinnings(input, false);
+    }
+    static int part2(final String input) {
+        return calculateWinnings(input, true);
+    }
+
+    private static int calculateWinnings(String input, boolean playWithJokers) {
+        List<Hand> handsByStrength = input.lines().map(line -> Hand.parse(line, playWithJokers))
                 .sorted(Comparator.comparing(hand -> hand.strength)).toList();
         int totalWinnings = 0;
         for (int i = 0; i < handsByStrength.size(); i++) {
@@ -32,24 +40,23 @@ public class Day07 {
         final HandType handType;
         final long strength;
 
-
-        private Hand(String cards, int bid) {
+        private Hand(String cards, int bid, boolean playWithJokers) {
             this.cards = cards;
             this.bid = bid;
-            this.handType = HandType.of(cards);
-            this.strength = calculateStrength(handType, cards);
+            this.handType = HandType.of(cards, playWithJokers);
+            this.strength = calculateStrength(handType, cards, playWithJokers);
         }
 
-        static Hand parse(String input) {
+        static Hand parse(String input, boolean playWithJokers) {
             String[] cardsAndBid = input.split(" ");
-            return new Hand(cardsAndBid[0], Integer.parseInt(cardsAndBid[1]));
+            return new Hand(cardsAndBid[0], Integer.parseInt(cardsAndBid[1]), playWithJokers);
         }
 
-        private static long calculateStrength(HandType handType, String cards) {
+        private static long calculateStrength(HandType handType, String cards, boolean playWithJokers) {
             String strengthCards = cards.replaceAll("A", "E")
                     .replaceAll("K", "D")
                     .replaceAll("Q", "C")
-                    .replaceAll("J", "B")
+                    .replaceAll("J", playWithJokers ? "1" : "B")
                     .replaceAll( "T", "A");
             return HexFormat.fromHexDigitsToLong(handType.strength + strengthCards);
         }
@@ -66,14 +73,22 @@ public class Day07 {
                 List.of(1, 1, 1, 1, 1), new HandType("High Card", 0)
         );
 
-        static HandType of(String cards) {
+        static HandType of(String cards, boolean playWithJokers) {
             Map<Integer, Integer> cardToCount = cards.chars()
                     .mapToObj(ch -> new SimpleEntry<>(ch, 1))
                     .collect(Collectors.<SimpleEntry<Integer, Integer>, Integer, Integer>toMap(
                             SimpleEntry::getKey,
                             SimpleEntry::getValue,
                             Integer::sum));
-            List<Integer> cardCounts = cardToCount.values().stream().sorted().collect(toList());
+            int jokerCount = playWithJokers && cardToCount.containsKey((int)'J')
+                    ? cardToCount.remove((int) 'J')
+                    : 0;
+            final List<Integer> cardCounts = cardToCount.values().stream().sorted().collect(toList());
+            if (cardCounts.isEmpty()) {
+                cardCounts.add(5);
+            } else {
+                cardCounts.set(cardCounts.size() - 1, cardCounts.getLast() + jokerCount);
+            }
             return CARD_COUNTS_TO_HAND_TYPE.get(cardCounts);
         }
     }
