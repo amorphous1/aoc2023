@@ -107,7 +107,7 @@ humidity-to-location map:
 56 93 4""";
 
         assertEquals(35, Day05.part1(sampleInput));
-//        assertEquals(30, Day05.part2(sampleInput));
+        assertEquals(46, Day05.part2(sampleInput));
     }
 
     @Test
