@@ -156,6 +156,16 @@ XXX = (XXX, XXX)"""));
     }
 
     @Test
+    public void day09() {
+        final String sampleInput = """
+0 3 6 9 12 15
+1 3 6 10 15 21
+10 13 16 21 30 45""";
+
+        assertEquals(114, Day09.part1(sampleInput));
+    }
+
+    @Test
     public void day10() {
         assertEquals(8, Day10.part1("""
 ..F7.
@@ -200,8 +210,7 @@ L7JLJL-JLJLJL--JLJ.L"""));
 .........#
 ..........
 .......#..
-#...#.....
-""";
+#...#.....""";
 
         assertEquals(374, Day11.Universe.parse(sampleInput).sumOfDistances(2));
         assertEquals(1030, Day11.Universe.parse(sampleInput).sumOfDistances(10));
