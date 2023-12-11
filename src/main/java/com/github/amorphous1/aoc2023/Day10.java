@@ -13,12 +13,15 @@ public class Day10 {
     public static void main(String[] args) throws URISyntaxException, IOException {
         String input = Files.readString(Paths.get(Day10.class.getClassLoader().getResource("day10.input").toURI()));
         System.out.println(part1(input));
+        System.out.println(part2(input));
     }
 
     static long part1(final String input) {
-        return Tiles.parse(input).longestLoop() / 2;
+        return Tiles.parse(input).longestLoop().size() / 2;
     }
-
+    static long part2(final String input) {
+        return Tiles.parse(input).enclosedByLongestLoop().size();
+    }
 
     private record Tiles(String[] rows, Coord start) {
         static final Map<Character, List<Coord>> TILE_TO_CONNECTIONS = Map.of(
@@ -56,25 +59,46 @@ public class Day10 {
                     : '.';
         }
 
-        int longestLoop() {
+        Set<Coord> longestLoop() {
             return Stream.of(NORTH, EAST, SOUTH, WEST)
                     .filter(direction -> neighbours(start.move(direction)).contains(start))
-                    .map(this::loopLength)
-                    .max(Comparator.naturalOrder()).orElseThrow();
+                    .map(this::loop)
+                    .max(Comparator.comparing(Set::size)).orElseThrow();
         }
 
-        private int loopLength(Coord direction) {
+        Set<Coord> enclosedByLongestLoop() {
+            Set<Coord> loop = longestLoop();
+            Set<Coord> enclosedByLoop = new HashSet<>();
+            for (int y = 0; y < rows.length; y++)
+                for (int x = 0; x < rows[y].length(); x++) {
+                    Coord pos = new Coord(x,y);
+                    if (!loop.contains(pos) && isInside(pos, loop))
+                        enclosedByLoop.add(pos);
+                }
+            return enclosedByLoop;
+        }
+
+        private boolean isInside(Coord pos, Set<Coord> loop) {
+            final Set<Character> crossingTheLoop = Set.of('S', '|', 'F', '7');
+            int loopCrossed = 0;
+            for (Coord ray = pos.move(EAST); ray.x < rows[pos.y].length(); ray = ray.move(EAST))
+                if (loop.contains(ray) && crossingTheLoop.contains(tileAt(ray)))
+                    loopCrossed++;
+            return loopCrossed % 2 == 1;
+        }
+
+        private Set<Coord> loop(Coord direction) {
             Coord location = start.move(direction);
-            int step = 1;
+            Set<Coord> result = new HashSet<>(Set.of(start, location));
             while (!location.equals(start)) {
                 List<Coord> connections = new ArrayList<>(TILE_TO_CONNECTIONS.get(tileAt(location)));
                 connections.remove(OPPOSITES.get(direction));
                 assert connections.size() == 1;
                 direction = connections.getFirst();
                 location = location.move(direction);
-                step++;
+                result.add(location);
             }
-            return step;
+            return result;
         }
     }
 
