@@ -154,4 +154,16 @@ LR
 22Z = (22B, 22B)
 XXX = (XXX, XXX)"""));
     }
+
+    @Test
+    public void day10() {
+        final String sampleInput = """
+..F7.
+.FJ|.
+SJ.L7
+|F--J
+LJ...""";
+
+        assertEquals(8, Day10.part1(sampleInput));
+    }
 }
