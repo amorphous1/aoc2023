@@ -187,4 +187,23 @@ L---JF-JLJ.||-FJLJJ7
 L.L7LFJ|||||FJL7||LJ
 L7JLJL-JLJLJL--JLJ.L"""));
     }
+
+    @Test
+    public void day11() {
+        final String sampleInput = """
+...#......
+.......#..
+#.........
+..........
+......#...
+.#........
+.........#
+..........
+.......#..
+#...#.....
+""";
+
+        assertEquals(374, Day11.part1(sampleInput));
+    }
+
 }
