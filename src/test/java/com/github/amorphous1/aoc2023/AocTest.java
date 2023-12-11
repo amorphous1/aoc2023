@@ -163,6 +163,7 @@ XXX = (XXX, XXX)"""));
 10 13 16 21 30 45""";
 
         assertEquals(114, Day09.part1(sampleInput));
+        assertEquals(2, Day09.part2(sampleInput));
     }
 
     @Test
