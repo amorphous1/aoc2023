@@ -203,7 +203,8 @@ L7JLJL-JLJLJL--JLJ.L"""));
 #...#.....
 """;
 
-        assertEquals(374, Day11.part1(sampleInput));
+        assertEquals(374, Day11.Universe.parse(sampleInput).sumOfDistances(2));
+        assertEquals(1030, Day11.Universe.parse(sampleInput).sumOfDistances(10));
+        assertEquals(8410, Day11.Universe.parse(sampleInput).sumOfDistances(100));
     }
-
 }
