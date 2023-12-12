@@ -219,6 +219,19 @@ L7JLJL-JLJLJL--JLJ.L"""));
     }
 
     @Test
+    public void day12() {
+        String sampleInput = """
+???.### 1,1,3
+.??..??...?##. 1,1,3
+?#?#?#?#?#?#?#? 1,3,1,6
+????.#...#... 4,1,1
+????.######..#####. 1,6,5
+?###???????? 3,2,1""";
+
+        assertEquals(21, Day12.part1(sampleInput));
+    }
+
+    @Test
     public void day13() {
         final String sampleInput = """
 #.##..##.
