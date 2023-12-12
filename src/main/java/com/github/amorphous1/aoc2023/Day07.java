@@ -26,11 +26,10 @@ public class Day07 {
 
     private static int calculateWinnings(String input, boolean playWithJokers) {
         List<Hand> handsByStrength = input.lines().map(line -> Hand.parse(line, playWithJokers))
-                .sorted(Comparator.comparing(hand -> hand.strength)).toList();
+                .sorted(Comparator.comparing(hand -> hand.strengthSort)).toList();
         int totalWinnings = 0;
-        for (int i = 0; i < handsByStrength.size(); i++) {
+        for (int i = 0; i < handsByStrength.size(); i++)
             totalWinnings += (i + 1) * handsByStrength.get(i).bid;
-        }
         return totalWinnings;
     }
 
@@ -38,13 +37,13 @@ public class Day07 {
         final String cards;
         final int bid;
         final HandType handType;
-        final long strength;
+        final String strengthSort;
 
         private Hand(String cards, int bid, boolean playWithJokers) {
             this.cards = cards;
             this.bid = bid;
             this.handType = HandType.of(cards, playWithJokers);
-            this.strength = calculateStrength(handType, cards, playWithJokers);
+            this.strengthSort = calculateStrength(handType, cards, playWithJokers);
         }
 
         static Hand parse(String input, boolean playWithJokers) {
@@ -52,13 +51,13 @@ public class Day07 {
             return new Hand(cardsAndBid[0], Integer.parseInt(cardsAndBid[1]), playWithJokers);
         }
 
-        private static long calculateStrength(HandType handType, String cards, boolean playWithJokers) {
-            String strengthCards = cards.replaceAll("A", "E")
+        private static String calculateStrength(HandType handType, String cards, boolean playWithJokers) {
+            String strengthSortCards = cards.replaceAll("A", "E")
                     .replaceAll("K", "D")
                     .replaceAll("Q", "C")
                     .replaceAll("J", playWithJokers ? "1" : "B")
                     .replaceAll( "T", "A");
-            return HexFormat.fromHexDigitsToLong(handType.strength + strengthCards);
+            return handType.strength + strengthSortCards;
         }
     }
 
@@ -76,19 +75,12 @@ public class Day07 {
         static HandType of(String cards, boolean playWithJokers) {
             Map<Integer, Integer> cardToCount = cards.chars()
                     .mapToObj(ch -> new SimpleEntry<>(ch, 1))
-                    .collect(Collectors.<SimpleEntry<Integer, Integer>, Integer, Integer>toMap(
-                            SimpleEntry::getKey,
-                            SimpleEntry::getValue,
-                            Integer::sum));
-            int jokerCount = playWithJokers && cardToCount.containsKey((int)'J')
-                    ? cardToCount.remove((int) 'J')
-                    : 0;
-            final List<Integer> cardCounts = cardToCount.values().stream().sorted().collect(toList());
-            if (cardCounts.isEmpty()) {
-                cardCounts.add(5);
-            } else {
-                cardCounts.set(cardCounts.size() - 1, cardCounts.getLast() + jokerCount);
-            }
+                    .collect(Collectors.<SimpleEntry<Integer, Integer>, Integer, Integer>toMap(SimpleEntry::getKey, SimpleEntry::getValue, Integer::sum));
+            int jokerCount = playWithJokers && cardToCount.containsKey((int)'J') ? cardToCount.remove((int) 'J') : 0;
+            List<Integer> cardCounts = cardToCount.values().stream().sorted().collect(toList());
+            if (cardCounts.isEmpty())  // whole hand of jokers...
+                cardCounts.add(0);
+            cardCounts.set(cardCounts.size() - 1, cardCounts.getLast() + jokerCount);
             return CARD_COUNTS_TO_HAND_TYPE.get(cardCounts);
         }
     }
