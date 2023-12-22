@@ -217,4 +217,26 @@ L7JLJL-JLJLJL--JLJ.L"""));
         assertEquals(1030, Day11.Universe.parse(sampleInput).sumOfDistances(10));
         assertEquals(8410, Day11.Universe.parse(sampleInput).sumOfDistances(100));
     }
+
+    @Test
+    public void day13() {
+        final String sampleInput = """
+#.##..##.
+..#.##.#.
+##......#
+##......#
+..#.##.#.
+..##..##.
+#.#.##.#.
+
+#...##..#
+#....#..#
+..##..###
+#####.##.
+#####.##.
+..##..###
+#....#..#""";
+
+        assertEquals(405, Day13.part1(sampleInput));
+    }
 }
