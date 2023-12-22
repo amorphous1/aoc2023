@@ -237,7 +237,7 @@ L7JLJL-JLJLJL--JLJ.L"""));
 ..##..###
 #....#..#""";
 
-        assertEquals(405, Day13.part1(sampleInput));
-        assertEquals(400, Day13.part2(sampleInput));
+        assertEquals(405, Day13.summarise(sampleInput, 0));
+        assertEquals(400, Day13.summarise(sampleInput, 1));
     }
 }

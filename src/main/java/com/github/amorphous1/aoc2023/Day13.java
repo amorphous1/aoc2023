@@ -11,21 +11,14 @@ import java.util.stream.IntStream;
 public class Day13 {
     public static void main(String[] args) throws URISyntaxException, IOException {
         String input = Files.readString(Paths.get(Day13.class.getClassLoader().getResource("day13.input").toURI()));
-        System.out.println(part1(input));
-        System.out.println(part2(input));
+        System.out.println(summarise(input, 0));
+        System.out.println(summarise(input, 1));
     }
 
-    static long part1(String input) {
+    static long summarise(String input, int totalDiffs) {
         return Arrays.stream(input.split("\n\n"))
                 .map(Mirror::parse)
-                .map(m -> m.summarise(0))
-                .mapToLong(l -> l).sum();
-    }
-
-    static long part2(String input) {
-        return Arrays.stream(input.split("\n\n"))
-                .map(Mirror::parse)
-                .map(m -> m.summarise(1))
+                .map(m -> m.summarise(totalDiffs))
                 .mapToLong(l -> l).sum();
     }
 
