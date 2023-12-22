@@ -240,4 +240,22 @@ L7JLJL-JLJLJL--JLJ.L"""));
         assertEquals(405, Day13.summarise(sampleInput, 0));
         assertEquals(400, Day13.summarise(sampleInput, 1));
     }
+
+    @Test
+    public void day14() {
+        final String sampleInput = """
+O....#....
+O.OO#....#
+.....##...
+OO.#O....O
+.O.....O#.
+O.#..O.#.#
+..O..#O..O
+.......O..
+#....###..
+#OO..#....""";
+
+        assertEquals(136, Day14.part1(sampleInput));
+    }
+
 }
