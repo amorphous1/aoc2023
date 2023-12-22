@@ -12,32 +12,48 @@ public class Day13 {
     public static void main(String[] args) throws URISyntaxException, IOException {
         String input = Files.readString(Paths.get(Day13.class.getClassLoader().getResource("day13.input").toURI()));
         System.out.println(part1(input));
+        System.out.println(part2(input));
     }
 
     static long part1(String input) {
         return Arrays.stream(input.split("\n\n"))
                 .map(Mirror::parse)
-                .map(Mirror::summarise)
+                .map(m -> m.summarise(0))
+                .mapToLong(l -> l).sum();
+    }
+
+    static long part2(String input) {
+        return Arrays.stream(input.split("\n\n"))
+                .map(Mirror::parse)
+                .map(m -> m.summarise(1))
                 .mapToLong(l -> l).sum();
     }
 
     private record Mirror(String[] rows, String[] cols) {
-        public long summarise() {
+        public long summarise(int totalDiffs) {
             long result = 0;
             for (int col = 0; col < cols.length; col++)
-                if (isLineOfReflection(col, cols))
+                if (isLineOfReflection(col, cols, totalDiffs))
                     result+= col;
             for (int row = 0; row < rows.length; row++)
-                if (isLineOfReflection(row, rows))
+                if (isLineOfReflection(row, rows, totalDiffs))
                     result+= 100L * row;
             return result;
         }
 
-        private boolean isLineOfReflection(int candidate, String[] pattern) {
-            for (int i = 0; i < Math.min(candidate, pattern.length - candidate); i++)
-                if (!pattern[candidate + i].equals(pattern[candidate - i - 1]))
+        private boolean isLineOfReflection(int candidate, String[] pattern, int totalDiffs) {
+            int currentDiffs = 0;
+            for (int i = 0; i < Math.min(candidate, pattern.length - candidate); i++) {
+                currentDiffs += countDiffs(pattern[candidate + i], pattern[candidate - i - 1]);
+                if (currentDiffs > totalDiffs)
                     return false;
-            return true;
+            }
+            return currentDiffs == totalDiffs;
+        }
+
+        private static int countDiffs(final String s1, final String s2) {
+            assert s1.length() == s2.length();
+            return IntStream.range(0, s1.length()).map(i -> s1.charAt(i) == s2.charAt(i) ? 0 : 1).sum();
         }
 
         static Mirror parse(String input) {
